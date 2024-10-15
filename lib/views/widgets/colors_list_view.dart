@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
 
 class ColorItem extends StatelessWidget {
-  const ColorItem({super.key, required this.color});
+  const ColorItem({super.key, required this.color, required this.isActive});
 
   final Color color;
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: 24,
-      backgroundColor: color,
-    );
+    return isActive
+        ? CircleAvatar(
+            radius: 24,
+            backgroundColor: Colors.white,
+            child: CircleAvatar(
+              radius: 22,
+              backgroundColor: color,
+            ),
+          )
+        : CircleAvatar(
+            radius: 24,
+            backgroundColor: color,
+          );
   }
 }
 
-class ColorsListView extends StatelessWidget {
+class ColorsListView extends StatefulWidget {
   const ColorsListView({super.key});
 
-  static const List<Color> colors = [
+  @override
+  State<ColorsListView> createState() => _ColorsListViewState();
+}
+
+class _ColorsListViewState extends State<ColorsListView> {
+  int activeIndex = 0;
+
+  List<Color> colors = [
     Colors.red,
     Colors.pink,
     Colors.green,
@@ -46,7 +63,16 @@ class ColorsListView extends StatelessWidget {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: ColorItem(color: colors[index]),
+            child: GestureDetector(
+              onTap: () {
+                activeIndex = index;
+                setState(() {});
+              },
+              child: ColorItem(
+                color: colors[index],
+                isActive: activeIndex == index,
+              ),
+            ),
           );
         },
       ),
